@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Post
 from .forms import PostForm
+from django.contrib import messages
 
 # Create your views here.
 def post_list(request):
@@ -20,6 +21,7 @@ def post_new(request):
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
+            messages.success(request, 'New Post created!')
             return redirect(post_detail, pk=post.pk)
     else:
         form = PostForm()
@@ -34,6 +36,9 @@ def post_edit(request, pk):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            messages.success(request, 'Post Id %s updated!' % pk,'alert alert-success')
+            messages.success(request, 'Bien hecho!', 'alert alert-success')
+            messages.info(request, 'Sigue Así!', 'alert alert-info')
             return redirect(post_detail, pk=post.pk)
     else:
         form = PostForm(instance=post)
